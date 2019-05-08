@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- 第一步：配置数据源，就是对数据库建立连接,将数据库配置文件加载进来 -->
+	<bean id="config" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<!-- 这个属性是要加载什么文件进来，这个属性是一个数组 -->
+		<property name="locations">
+			<array>
+				<value>classpath:db.properties</value>
+			</array>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 配置数据库信息 
+	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${userName}"></property>
+		<property name="password" value="${password}"></property>
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<property name="maxActive" value="${maxActive}"></property>
+	</bean>-->
+	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mySql://localhost:3306/test1?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+		<property name="maxIdle" value="1000"></property>
+		<property name="maxActive" value="20"></property>
+	</bean>
+	
+	<!-- 获取sqlsessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 引入数据源 ，即将数据源交给spring-->
+		<property name="dataSource" ref="datasource"></property>
+		<property name="typeAliasesPackage" value="com.Alyssa.entity"></property>
+		<!-- 加载mybatis的配置文件 -->
+		<property name="configLocation" value="classpath:Mybatis-config.xml"></property>
+		<!-- 加载mapper.xml文件 ，将mybatis的mapper.xml文件的位置给spring-->
+		<property name="mapperLocations" value="classpath:com/Alyssa/mapper/*.xml"></property>
+	</bean>
+	
+	<!-- 这里创建一个mapper，用于将mybatis的sqlsessionFactory交给Spring -->
+	<bean id="mappers" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<!--  指定批量产生哪个包的mapper对象 -->
+		<property name="basePackage" value="com.Alyssa.mapper"></property>
+	</bean>
+	
+	<!-- 将service依赖dao层，也就是mapper层 -->
+	<bean id="studentService" class="com.Alyssa.serviceImpl.StudentServiceImpl">
+		<property name="studentMapper" ref="studentMapper"></property>
+	</bean>
+	<!-- 将controller依赖于service 
+	<bean id="studentController" class="com.Alyssa.Controller.StudentController">
+		<property name="studentService" ref="studentService"></property>
+	</bean>-->
+</beans>

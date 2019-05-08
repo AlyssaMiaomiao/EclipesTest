@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Alyssa.mapper.StudentMapper">
+	<insert id="insertStudent" parameterType="com.Alyssa.entity.Student">
+		insert into student (stuID,stuName,stuPaw,stuSex,stuAge,stuJgV,stuDept)
+		values(#{stuID},#{stuName},#{stuPaw},#{stuSex},#{stuAge},#{stuJgV},#{stuDept})
+	</insert>
+	
+	<select id="findStudent" resultType="com.Alyssa.entity.Student">
+		select * from student where stuName=#{stuName}
+	</select>
+	
+	 <!--配置一个resultMap 指定返回的类型 -->  
+    <!--  <resultMap id="AllStudent" type="com.Alyssa.entity.Student">  
+        <id column="stuID" property="stuID" />  
+        <result column="stuName" property="stuName" />  
+        <result column="stuPaw" property="stuPaw" />  
+        <result column="stuSex" property="stuSex" />  
+        <result column="stuAge" property="stuAge" />  
+        <result column="stuJgV" property="stuJgV" />  
+        <result column="stuDept" property="stuDept" />  
+    </resultMap>-->
+	<select id="findAll" resultType="com.Alyssa.entity.Student">
+		select * from student
+	</select>
+	
+	<update id="updateStudent" parameterType="com.Alyssa.entity.Student">
+		update student set stuName=#{stuName},stuPaw=#{stuPaw},stuSex=#{stuSex},stuAge=#{stuAge},stuJgV=#{stuJgV},stuDept=#{stuDept} where stuID=#{stuID}
+	</update>
+	<delete id="deleteStudent">
+		delete from student where stuID=#{stuID}
+	</delete>
+</mapper>
